@@ -4,12 +4,12 @@ import config from "config";
 
 // He used UserDocument in tutorial.
 export interface UserType extends mongoose.Document {
-  email: string,
-  name: string,
-  password: string,
-  createdAt: Date,
-  updatedAt: Date,
-  comparePassword(candidatePassword: string): Promise<Boolean>
+  email: string;
+  name: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+  comparePassword(candidatePassword: string): Promise<Boolean>;
 }
 
 // Mongoose used to define this before mongoose 6. For backwards compatibility we will now just redefine it ourselves.
@@ -51,5 +51,5 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
   return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 }
 
-const UserModel = mongoose.model("User", userSchema);
+const UserModel = mongoose.model<UserType>("User", userSchema);
 export default UserModel;
