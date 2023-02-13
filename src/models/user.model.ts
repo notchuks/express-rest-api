@@ -13,12 +13,12 @@ export interface UserType extends mongoose.Document {
 }
 
 // Mongoose used to define this before mongoose 6. For backwards compatibility we will now just redefine it ourselves.
-export interface HookNextFunction {
-  // eslint-disable-next-line @typescript-eslint/no-explicit any
-  (error?: Error): any
-}
+// export interface HookNextFunction {
+//   // eslint-disable-next-line @typescript-eslint/no-explicit any
+//   (error?: Error): any
+// }
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<UserType>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   let user = this as UserType;
 
   if (!user.isModified("password")) {
@@ -45,7 +45,7 @@ userSchema.pre("save", async function(next) {
   return next();
 });
 
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> { // add this: UserType, to parameters
   const user = this as UserType;
 
   return bcrypt.compare(candidatePassword, user.password).catch((e) => false);

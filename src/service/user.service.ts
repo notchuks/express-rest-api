@@ -12,14 +12,14 @@ export async function createUser(input: DocumentDefinition<Omit<UserType, "creat
   }
 }
 
-export async function validatePassword({ email, password, } : { email: string; password: string; }) {
+export async function validatePassword({ email, password, }: { email: string; password: string; }): Promise<any> {
   const user = await UserModel.findOne({ email });
 
   if(!user) {
     return false;
   }
 
-  const isValid = user.comparePassword(password);
+  const isValid = await user.comparePassword(password);
 
   if(!isValid) return false;
 
