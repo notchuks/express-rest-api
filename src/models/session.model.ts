@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import config from "config";
-import { UserType } from "./user.model";
+import { UserDocument } from "./user.model";
 
 // He used UserDocument in tutorial.
-export interface SessionType extends mongoose.Document {
-  user: UserType["_id"];
+export interface SessionDocument extends mongoose.Document {
+  user: UserDocument["_id"];
   valid: boolean;
   userAgent: string;
   createdAt: Date;
@@ -23,6 +21,6 @@ const sessionSchema = new mongoose.Schema(
   }
 );
 
-const SessionModel = mongoose.model<SessionType>("Session", sessionSchema);
+const SessionModel = mongoose.model<SessionDocument>("Session", sessionSchema);
 
 export default SessionModel;

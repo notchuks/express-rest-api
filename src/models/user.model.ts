@@ -2,11 +2,15 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
 
-// He used UserDocument in tutorial.
-export interface UserType extends mongoose.Document {
+// createdAt, updatedAt are not in user body in request. So an error is generated when using UserDocument interface as the type of the parameter of createUser functions. This is a nice workaround to use this interface in such functions
+export interface UserInput {
   email: string;
   name: string;
   password: string;
+}
+
+// He used UserDocument in tutorial.
+export interface UserDocument extends UserInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<Boolean>;
@@ -18,7 +22,7 @@ export interface UserType extends mongoose.Document {
 //   (error?: Error): any
 // }
 
-const userSchema = new mongoose.Schema<UserType>(
+const userSchema = new mongoose.Schema<UserDocument>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -30,7 +34,7 @@ const userSchema = new mongoose.Schema<UserType>(
 );
 
 userSchema.pre("save", async function (next) {
-  let user = this as UserType;
+  let user = this as UserDocument;
 
   if (!user.isModified("password")) {
     return next();
@@ -45,11 +49,11 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> { // add this: UserType, to parameters
-  const user = this as UserType;
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> { // add this: UserDocument, to parameters
+  const user = this as UserDocument;
 
   return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 }
 
-const UserModel = mongoose.model<UserType>("User", userSchema);
+const UserModel = mongoose.model<UserDocument>("User", userSchema);
 export default UserModel;

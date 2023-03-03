@@ -1,17 +1,5 @@
+require('dotenv').config({ path: __dirname+'/.env' });
+
 console.log(__dirname);
-
-interface Foo {
-  message: string;
-}
-
-const learn: Foo = {
-  message: "learn, boy!"
-}
-
-console.log(
-  {
-    valid: false,
-    expired: learn.message === "jwt expired",
-    decoded: null,
-  }
-)
+console.log(process.env.PUBLIC_KEY);
+console.log(process.env.PRIVATE_KEY);

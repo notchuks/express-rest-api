@@ -1,7 +1,9 @@
 # dependencies
 node_modules
 /src/.env
-
+/src/sunday.ts
+/src/utils/monday.ts
+/config/default.ts
 
 # testing
 /coverage
